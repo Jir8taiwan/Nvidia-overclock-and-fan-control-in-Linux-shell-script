@@ -23,13 +23,21 @@ nano ./fanNVIDIAfixspeed.sh
 ./fanNVIDIAfixspeed.sh
 
  Usage ./fanNVIDIAfixspeed.sh {all|powerlimit|overclock|fixfanspeed|showalltempfan}
+ 
  all: all four options
+ 
  powerlimit: define in the function and modify need
+ 
  overclock:  define in the function and modify need
+ 
  fixfanspeed:  define in config and auto run all gpus in system
+ 
  showalltempfan: show csv format in all gpus of temp and fan speed
+ 
 
 If this small code is helping through Arduino kits, it can donate BCH coin to me for encourage as following address: 
+
 # bitcoincash:qq6ghvdmyusnse9735rd5q09ensacl8z8qzrlwf49q
 
 Thank you very much.
+
