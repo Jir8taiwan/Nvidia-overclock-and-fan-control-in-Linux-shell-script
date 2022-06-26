@@ -11,13 +11,17 @@
 
 
 1. make the script exacutable
+
 chmod +x ./fanNVIDIAfixspeed.sh
 
 2. modify environment to fit usage
+
 nano ./fanNVIDIAfixspeed.sh
 
 3. run with option to call function needs
+
 ./fanNVIDIAfixspeed.sh
+
  Usage ./fanNVIDIAfixspeed.sh {all|powerlimit|overclock|fixfanspeed|showalltempfan}
  all: all four options
  powerlimit: define in the function and modify need
