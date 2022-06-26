@@ -65,8 +65,8 @@ function fixfanspeed(){
 echo "Todo fan speed fixing to" $Fanspeed 
 for List in $(seq 0 $ID)
 do
-DISPLAY=:0 XAUTHORITY=$ nvidia-settings -a [gpu:$List]/GPUFanControlState=1
-DISPLAY=:0 XAUTHORITY=$ nvidia-settings -a [fan:$List]/GPUTargetFanSpeed=$Fanspeed
+DISPLAY=:0 XAUTHORITY=$XWin nvidia-settings -a [gpu:$List]/GPUFanControlState=1
+DISPLAY=:0 XAUTHORITY=$XWin nvidia-settings -a [fan:$List]/GPUTargetFanSpeed=$Fanspeed
 sleep 1
 done
 }
