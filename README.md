@@ -7,7 +7,7 @@
  fan speed fixing
  show temp and fan
 
- version 20220626-1
+ The latest version 20220627-2
 
 
 1. make the script exacutable
@@ -34,6 +34,9 @@ nano ./fanNVIDIAfixspeed.sh
  
  showalltempfan: show csv format in all gpus of temp and fan speed
  
+ oc [ID] [CORE] [MEM]: overclock the appointed GPU id to tune core/mem alone
+ 
+ EX: oc 1 
 
 --
 
