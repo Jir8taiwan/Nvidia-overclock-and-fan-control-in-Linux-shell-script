@@ -6,8 +6,8 @@
 # overclock core and mem
 # fan speed fixing
 # show temp and fan
-#
-# version 20220627-2
+# 
+# version 20220627-3
 # ##############################################
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -125,6 +125,30 @@ sleep 1
 exit 0
 }
 
+## powerlimit appointed GPU watt value alone in an ID
+gpupowerlimit(){
+gpuid=$1
+gpupl=$2
+#string check as right format with values
+if [[ -z $gpuid ]]; then
+	echo "pl format error, missing #ID number."
+	exit 0
+fi
+if [[ $gpuid > $ID ]]; then
+	echo "pl format wrong, #ID number is not existed."
+	exit 0
+fi
+if [[ -z $gpupl ]]; then
+	echo "pl format error, missing #WATT value."
+	exit 0
+fi
+#go on processing
+echo "Overclock the GPU $gpuid to have POWERCHOKE $gpupl watt"
+echo ""
+sudo nvidia-smi -i $gpuid -pl $gpupl
+sleep 1
+exit 0
+}
 
 ## Case to call in sub command
 ## If command line of option is too many words, it can modify to fit by self.
@@ -151,10 +175,13 @@ case ${1} in
   "oc")
     occoremem $2 $3 $4
     #echo "ID: $2 CORE $3 MEM $4"
-  ;;
+    ;;
+  "pl")
+    gpupowerlimit $2 $3
+    ;;
   *)
 	echo "./fanNVIDIAfixspeed.sh"
-	echo "Usage ${0} {all | powerlimit | overclock | fixfanspeed | showinfo}"
+	echo "Usage ${0} {all | powerlimit | overclock | fixfanspeed | showinfo | oc | pl}"
 	echo "all 			: for all functino of need"
 	echo "powerlimit 	: for specificed cards of watt"
 	echo "overclock 	: for specificed catds of core/mem"
@@ -163,6 +190,8 @@ case ${1} in
 	# added oc alone in each card
 	echo ""
 	echo "oc #ID[num] #CORE[+/-num] #MEM[+/-num] 	: for overclock appointed GPU with core/mem modification"
-	echo "Example: ./fanNVIDIAfixspeed.sh oc 0 -50 +200"
+	echo "EX: ./fanNVIDIAfixspeed.sh oc 0 -50 +200"
+	echo "pl #ID[num] #WATT[num] 	: for choke appointed GPU with powerlimit output"
+	echo "EX: ./fanNVIDIAfixspeed.sh pl 1 75     as same as \"sudo nvidia-smi -i 1 -pl 75\""
 	;;
 esac
