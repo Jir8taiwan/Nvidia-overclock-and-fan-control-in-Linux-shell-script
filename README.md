@@ -1,5 +1,8 @@
 # Nvidia-overclock-and-fan-control-in-Linux-shell-script
 
+https://github.com/Jir8taiwan/Nvidia-overclock-and-fan-control-in-Linux-shell-script
+
+
  Nvidia GPUs control functions in command line
  for:
  power output limit
