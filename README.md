@@ -36,7 +36,7 @@ nano ./fanNVIDIAfixspeed.sh
  
  oc [ID] [CORE] [MEM]: overclock the appointed GPU id to tune core/mem alone
  
- EX: oc 1 
+ EX: oc 1 50 -100  (means ID 1 core +50 mem -100)
 
 --
 
