@@ -7,7 +7,7 @@
 # fan speed fixing
 # show temp and fan
 # 
-# version 20220627-3
+# version 20220628-1
 # ##############################################
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -150,6 +150,30 @@ sleep 1
 exit 0
 }
 
+## fix all GPUs with same fan speed in once
+fixallfanspeed(){
+allfanspeed=$1
+if [[ -z $allfanspeed ]]; then
+	echo "fan format error, missing #FAN value."
+	exit 0
+fi
+if [[ $allfanspeed < 0 ]]; then
+	echo "fan format wrong, #FAN value is out of range 0-100 percentage."
+	exit 0
+fi
+if [[ $allfanspeed > 100 ]]; then
+	echo "fan format wrong, #FAN value is out of range 0-100 percentage."
+	exit 0
+fi
+echo "fix all GPUs fan speed to $allfanspeed"
+for List in $(seq 0 $ID)
+do
+DISPLAY=:0 XAUTHORITY=$XWin nvidia-settings -a [gpu:$List]/GPUFanControlState=1
+DISPLAY=:0 XAUTHORITY=$XWin nvidia-settings -a [fan:$List]/GPUTargetFanSpeed=$allfanspeed
+sleep 1
+done
+}
+
 ## Case to call in sub command
 ## If command line of option is too many words, it can modify to fit by self.
 echo "This shell script will run your selection !"
@@ -179,19 +203,24 @@ case ${1} in
   "pl")
     gpupowerlimit $2 $3
     ;;
+  "fan")
+    fixallfanspeed $2
+    ;;
   *)
 	echo "./fanNVIDIAfixspeed.sh"
-	echo "Usage ${0} {all | powerlimit | overclock | fixfanspeed | showinfo | oc | pl}"
-	echo "all 			: for all functino of need"
-	echo "powerlimit 	: for specificed cards of watt"
-	echo "overclock 	: for specificed catds of core/mem"
-	echo "fixfanspeed 	: for specificed speed percentage"
-	echo "showinfo 		: for information in all GPUs of temp/fan speed"
+	echo "Usage ${0} {all | powerlimit | overclock | fixfanspeed | showinfo | oc | pl | fan}"
+	echo "all          : for all functino of need"
+	echo "powerlimit   : for specificed cards of watt"
+	echo "overclock    : for specificed catds of core/mem"
+	echo "fixfanspeed  : for specificed speed percentage"
+	echo "showinfo     : for information in all GPUs of temp/fan speed"
 	# added oc alone in each card
 	echo ""
 	echo "oc #ID[num] #CORE[+/-num] #MEM[+/-num] 	: for overclock appointed GPU with core/mem modification"
 	echo "EX: ./fanNVIDIAfixspeed.sh oc 0 -50 +200"
 	echo "pl #ID[num] #WATT[num] 	: for choke appointed GPU with powerlimit output"
-	echo "EX: ./fanNVIDIAfixspeed.sh pl 1 75     as same as \"sudo nvidia-smi -i 1 -pl 75\""
+	echo "EX: ./fanNVIDIAfixspeed.sh pl 1 75        as same as \"sudo nvidia-smi -i 1 -pl 75\""
+	echo "fan #FAN[percentage] 	: for fix all GPUs with appointed fan speed percentage"
+	echo "EX: ./fanNVIDIAfixspeed.sh fan 85"
 	;;
 esac
