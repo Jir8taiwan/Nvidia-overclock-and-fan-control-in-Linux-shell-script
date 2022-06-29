@@ -7,7 +7,7 @@
 # fan speed fixing
 # show temp and fan
 # 
-# version 20220628-1
+# version 20220629-1
 # ##############################################
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -27,6 +27,7 @@ ID=$(( $Alldevices - 1 ))
 ##echo $ID
 test ! -e $XWin && echo "The Xwin auth file '$XWin' DO NOT exist, and plese check config" && exit 0
 
+
 ### Powerload limit output
 ## It can add or delete the need of gpus IDs and power watt limit.
 ## My default is 3 cards and 65/67/70 watts.
@@ -39,6 +40,7 @@ sudo nvidia-smi -i 2 -pl 70
 sleep 2
 exit 0
 }
+
 
 ### Overclock core and mem
 ## It can add or delete the need of gpus IDs and specified core/mem.
@@ -55,6 +57,37 @@ DISPLAY=:0 XAUTHORITY=$Xwin /usr/bin/nvidia-settings --assign "[gpu:2]/GPUGraphi
 sleep 2
 exit 0
 }
+
+
+### Overclock test funciton in array way
+function overclock2(){
+## Array define
+## It can adjust gpu list to go in below format requirement
+## (ID num : Core : MEM)
+gpu=(0:50:200)
+gpu+=(1:50:200)
+gpu+=(2:50:0)
+## ToDo calculate
+#echo "Array length: ${#gpu[@]}"
+#echo "Array data: ${gpu[@]}"
+#echo ""
+arrlen=${#gpu[@]}
+for ((i=0; i < ${#gpu[@]}; i++))
+do
+#echo "data: $i ${gpu[$i]}"
+#echo ""
+dataid=$(echo ${gpu[$i]} | cut -d ":" -f 1)
+datacore=$(echo ${gpu[$i]} | cut -d ":" -f 2)
+datamem=$(echo ${gpu[$i]} | cut -d ":" -f 3)
+echo "Arry $i , ID $dataid , CORE $datacore , MEM $datamem , Total $arrlen"
+DISPLAY=:0 XAUTHORITY=$Xwin /usr/bin/nvidia-settings --assign "[gpu:$dataid]/GPUGraphicsClockOffset[3]=$datacore" 
+DISPLAY=:0 XAUTHORITY=$Xwin /usr/bin/nvidia-settings --assign "[gpu:$dataid]/GPUMemoryTransferRateOffset[3]=$datamem" 
+sleep 2
+done
+unset gpu
+exit 0
+}
+
 
 ### Fan speed fixing to 85 persontage
 #
@@ -90,6 +123,7 @@ nvidia-smi --query-gpu=fan.speed --format=csv,noheader
 sleep 1
 exit 0
 }
+
 
 ## overclock appointed GPU with a core/mem value alone in an ID
 function occoremem(){
@@ -189,6 +223,9 @@ case ${1} in
 	;;
   "overclock")
 	overclock
+	;;
+  "overclock2")
+	overclock2
 	;;
   "fixfanspeed")
     fixfanspeed
