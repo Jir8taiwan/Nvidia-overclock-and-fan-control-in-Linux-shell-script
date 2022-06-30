@@ -7,7 +7,7 @@
 # fan speed fixing
 # show temp and fan
 # 
-# version 20220629-1
+# version 20220630-1
 # ##############################################
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -26,7 +26,15 @@ ID=$(( $Alldevices - 1 ))
 ##echo $Alldevices
 ##echo $ID
 test ! -e $XWin && echo "The Xwin auth file '$XWin' DO NOT exist, and plese check config" && exit 0
-
+SERVICE="Xorg"
+if nvidia-smi -q | grep "$SERVICE" >/dev/null
+then
+    echo "$SERVICE is running ..."
+    echo ""
+else
+    echo "$SERVICE stopped in nvidia-smi of process, please check system in advanced or run startX first to use this tool script."
+    exit 0
+fi
 
 ### Powerload limit output
 ## It can add or delete the need of gpus IDs and power watt limit.
