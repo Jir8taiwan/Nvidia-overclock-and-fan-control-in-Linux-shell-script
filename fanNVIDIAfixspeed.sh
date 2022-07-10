@@ -7,7 +7,7 @@
 # fan speed fixing
 # show temp and fan
 # 
-# version 20220630-1
+# version 20220710-1
 # ##############################################
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -128,6 +128,9 @@ function showalltempfan(){
 echo "All GPUs temp and fan speed"
 nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader
 nvidia-smi --query-gpu=fan.speed --format=csv,noheader
+echo "All GPUs core and mem clocks"
+nvidia-smi --query-gpu=clocks.current.graphics --format=csv,noheader
+nvidia-smi --query-gpu=clocks.current.memory --format=csv,noheader
 sleep 1
 exit 0
 }
