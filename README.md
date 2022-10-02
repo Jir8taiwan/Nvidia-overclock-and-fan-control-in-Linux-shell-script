@@ -49,3 +49,9 @@ If this small code is helping and useful after application, it can donate BCH co
 
 Thank you very much.
 
+
+--
+Special NOTE:
+(1) Failed to set new Fan Speed in X desktop or 'GPUTargetFanSpeed=60' (Unknown Error) with failue in script command
+ans:
+It may try to add a line "needs_root_rights=yes" before the line "allowed_users=console" at "sudo nano /./etc/X11/Xwrapper.config".
